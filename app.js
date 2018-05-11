@@ -8,7 +8,19 @@ var express = require("express"),
 	User = require("./models/user");
 
 mongoose.connect("mongodb://localhost/auth_demo");
+
+app.use(require("express-session")({
+	secret: "Something Funny",
+	resave: false,
+	saveUninitialized: false
+}));
+
 app.set("view engine", "ejs");
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.get("/", function(req, res){
 	res.render("home");
